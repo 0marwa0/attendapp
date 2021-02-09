@@ -4,17 +4,16 @@
 .Rq_warrper {
   display: grid;
   width:300px;
-  position: relative;
-  border-radius:10px;
-  border:4px solid #6df3f3;
   align-items: center;
+  border:1px solid blue;
+  position: relative;
   grid-template-column: auto;
 }
 
 .svgicon {
   height: 150px;
-  left:25%;
-  top:25%;
+  left:20%;
+  top:20%;
   opacity: 0.5;
   position: absolute;
   width: auto;
@@ -61,50 +60,3 @@
     transform: rotate(360deg);
   }
 }
-.btn {
-  background-color: #fff;
-  color: rebeccapurple;
-  font-family: inherit;
-  font-weight: bold;
-  padding: 1rem;
-  border-radius: 5px;
-  border: none;
-  cursor: pointer;
-}
-
-.btn:focus {
-  outline: none;
-}
-
-.btn:active {
-  transform: scale(0.98);
-}
-
-#toasts {
-  position: fixed;
-  bottom: 10px;
-  right: 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-}
-
-.toast {
-  background-color: #fff;
-  border-radius: 5px;
-  padding: 1rem 2rem;
-  margin: 0.5rem;
-}
-
-.toast.info {
-  color: rebeccapurple;
-}
-
-.toast.success {
-  color: green;
-}
-
-.toast.error {
-  color: red;
-}
-

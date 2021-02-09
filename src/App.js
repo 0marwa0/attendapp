@@ -1,9 +1,15 @@
+import { Button, notification } from 'antd';
+import 'react-notifications/lib/notifications.css';
+import {NotificationContainer, NotificationManager} from 'react-notifications';
 import React, { Component } from "react";
-import "antd/dist/antd.css";
+
+import "antd/dist/antd.css";import { store } from 'react-notifications-component';
 import QrReader from "react-qr-reader";
 import { Table, Tag, Space } from "antd";
 import { ReactComponent as RQ } from "./qr.svg";
+
 import "./App.css";
+const key = 'updatable';
 const stu = ["marwa", "amna"];
 const columns = [
   {
@@ -28,17 +34,17 @@ const columns = [
     dataIndex: "group",
     render: (tags) => (
       <>
-        {tags.map((tag) => {
-          let color = tag.length > 5 ? "geekblue" : "green";
-          if (tag === "loser") {
-            color = "volcano";
-          }
-          return (
-            <Tag color={color} key={tag}>
-              {tag.toUpperCase()}
-            </Tag>
-          );
-        })}
+      {tags.map((tag) => {
+        let color = tag.length > 5 ? "geekblue" : "green";
+        if (tag === "loser") {
+          color = "volcano";
+        }
+        return (
+          <Tag color={color} key={tag}>
+          {tag.toUpperCase()}
+          </Tag>
+        );
+      })}
       </>
     ),
   },
@@ -75,8 +81,25 @@ class App extends Component {
     result: "No One",
     sourceData: [],
   };
+  do=(ar)=>{
+    console.log("it workling")
+    NotificationManager.info('Info message');
 
-  handleScan = (data) => {
+  }
+  openNotification = () => {
+  notification.open({
+    key,
+    message: 'Notification Title',
+    description: 'description.',
+  });
+  setTimeout(() => {
+    notification.open({
+      key,
+      message: 'New Title',
+      description: 'New description.',
+    });
+  }, 1000);
+}; handleScan = (data) => {
     if (data) {
       dataApp.map((i) => {
         if (i.name === data) {
@@ -95,8 +118,7 @@ class App extends Component {
   };
   handleError = (err) => {
     console.error(err);
-  };
-
+  }
   componentDidMount() {
     // let x = [546];
     // x = x.toString(10).replace(/\D/g, "0").split("").map(String);
@@ -115,22 +137,25 @@ class App extends Component {
 
   render() {
     return (
+      <div>
+      <button class="btn" id="button"onCLick={this.openNotification()}>Show Notification</button>
+      <NotificationContainer/>
       <div className="app_leyout">
-        <div className="Rq_warrper">
-          <QrReader
-            delay={300}
-            onError={this.handleError}
-            onLoad={(e) => console.log(e, "on load")}
-            onScan={this.handleScan}
-            style={{ width: "100%", heihgt: "40%" }}
-          />
-          <RQ className="svgicon" />
-        </div>
-        <div style={{ width: "700px" }}>
-          <Table columns={columns} dataSource={this.state.sourceData} />
-          <p>{this.state.result}</p>
-        </div>
+      <div className="Rq_warrper">
+      <QrReader
+      onError={this.handleError}
+      onLoad={(e) => console.log(e, "on load")}
+      onScan={this.handleScan}
+      style={{ width: "100%", heihgt: "100",borderRadius:"10px" }}
+      />
+      <div id="toasts"></div>
+      <RQ className="svgicon" />
       </div>
+      <div style={{ width: "700px" }}>
+      <Table columns={columns} dataSource={this.state.sourceData} />
+      <p>{this.state.result}</p>
+      </div>
+      </div>      </div>
     );
   }
 }
