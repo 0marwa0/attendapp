@@ -1,16 +1,22 @@
-import { Button, notification } from 'antd';
-import 'react-notifications/lib/notifications.css';
-import {NotificationContainer, NotificationManager} from 'react-notifications';
-import React, { Component } from "react";
+import NavBar from "./navBar";
+import { Modal } from "antd";
 
-import "antd/dist/antd.css";import { store } from 'react-notifications-component';
+import { Button, notification } from "antd";
+import "react-notifications/lib/notifications.css";
+import {
+  NotificationContainer,
+  NotificationManager,
+} from "react-notifications";
+import React, { Component } from "react";
+import "antd/dist/antd.css";
+import { store } from "react-notifications-component";
 import QrReader from "react-qr-reader";
 import { Table, Tag, Space } from "antd";
 import { ReactComponent as RQ } from "./qr.svg";
-
+import Student from "./profile";
 import "./App.css";
-const key = 'updatable';
-const stu = ["marwa", "amna"];
+const key = "updatable";
+const stu = ["alert", "amna"];
 const columns = [
   {
     title: "Name",
@@ -34,17 +40,17 @@ const columns = [
     dataIndex: "group",
     render: (tags) => (
       <>
-      {tags.map((tag) => {
-        let color = tag.length > 5 ? "geekblue" : "green";
-        if (tag === "loser") {
-          color = "volcano";
-        }
-        return (
-          <Tag color={color} key={tag}>
-          {tag.toUpperCase()}
-          </Tag>
-        );
-      })}
+        {tags.map((tag) => {
+          let color = tag.length > 5 ? "geekblue" : "green";
+          if (tag === "loser") {
+            color = "volcano";
+          }
+          return (
+            <Tag color={color} key={tag}>
+              {tag.toUpperCase()}
+            </Tag>
+          );
+        })}
       </>
     ),
   },
@@ -59,6 +65,9 @@ const columns = [
   //   ),
   // },
 ];
+let m = ["mmmmmarwa", "jawad"].filter(function (item, pos, self) {
+  console.log(pos, self, item, "dom dom");
+});
 
 const dataApp = [
   {
@@ -70,7 +79,7 @@ const dataApp = [
   },
   {
     key: "2",
-    name: "marwa",
+    name: "alert",
     attend: 0,
     grad: "forth",
     group: ["A"],
@@ -78,33 +87,47 @@ const dataApp = [
 ];
 class App extends Component {
   state = {
+    visible: false,
+    showStudent: false,
+    confirmLoading: false,
+    modalText: false,
     result: "No One",
     sourceData: [],
   };
-  do=(ar)=>{
-    console.log("it workling")
-    NotificationManager.info('Info message');
+  do = (ar) => {
+    console.log("it workling");
+    NotificationManager.info("Info message");
+  };
+  createNotification = (type) => {
+    return () => {
+      NotificationManager.error("Error message", "Click me!", 5000, () => {
+        alert("callback");
+      });
+      //       break;
+      //   }
+    };
+  };
 
-  }
   openNotification = () => {
-  notification.open({
-    key,
-    message: 'Notification Title',
-    description: 'description.',
-  });
-  setTimeout(() => {
-    notification.open({
-      key,
-      message: 'New Title',
-      description: 'New description.',
+    return () => {
+      NotificationManager.error("Not found !", "Click me!", 5000, () => {
+        alert("callback");
+      });
+    };
+  };
+
+  showSuccess = () => {
+    NotificationManager.success("Done", "Click me!", 5000, () => {
+      alert("callback");
     });
-  }, 1000);
-}; handleScan = (data) => {
+  };
+  handleScan = (data) => {
     if (data) {
       dataApp.map((i) => {
         if (i.name === data) {
           console.log("its there", dataApp);
           i.attend = 1;
+          this.show();
           this.setState({ sourceData: dataApp });
         }
       });
@@ -118,44 +141,94 @@ class App extends Component {
   };
   handleError = (err) => {
     console.error(err);
-  }
-  componentDidMount() {
-    // let x = [546];
-    // x = x.toString(10).replace(/\D/g, "0").split("").map(String);
-    // let count = "";
+  };
 
-    // for (let i = 0; i < x.length; i++) {
-    //   count = x[i] + count;
-    //   x[i] = count;
-    //   console.log(i);
-    // }
-    // console.log(x);
-    // // console.log(year);
-    // // console.log(x, "num");
+  setConfirmLoading = () => {
+    this.setState({ confirmLoading: true });
+  };
+  setModalText = () => {};
+
+  showModal = () => {
+    this.setState({ visible: true });
+  };
+
+  handleOk = () => {
+    // this.setState({ confirmLoading: true });
+    // setTimeout(() => {
+    this.setState({ visible: true });
+    //   this.setState({ confirmLoading: true });
+    // }, 2000);
+  };
+
+  handleCancel = () => {
+    this.setState({ visible: false });
+    console.log("Clicked cancel button");
+  };
+  test = (arg) => {
+    console.log(
+      arg.reduce((i, x) => i + x),
+      "ttt",
+      typeof arg
+    );
+  };
+
+  componentDidMount() {
     this.setState({ sourceData: dataApp });
   }
 
+  showStudentbtn = (data) => {
+    if (data) {
+      this.setState({ showStudent: true, visible: false });
+    }
+  };
   render() {
     return (
       <div>
-      <button class="btn" id="button"onCLick={this.openNotification()}>Show Notification</button>
-      <NotificationContainer/>
-      <div className="app_leyout">
-      <div className="Rq_warrper">
-      <QrReader
-      onError={this.handleError}
-      onLoad={(e) => console.log(e, "on load")}
-      onScan={this.handleScan}
-      style={{ width: "100%", heihgt: "100",borderRadius:"10px" }}
-      />
-      <div id="toasts"></div>
-      <RQ className="svgicon" />
+        <NavBar search={this.handleOk} />
+        <NotificationContainer />
+        {this.state.showStudent ? (
+          <Student />
+        ) : (
+          <div className="app_leyout">
+            <div className="Rq_warrper">
+              <QrReader
+                onError={this.handleError}
+                onLoad={(e) => console.log(e, "on load")}
+                onScan={this.handleScan}
+                style={{ width: "100%", heihgt: "100", borderRadius: "10px" }}
+              />
+              <div id="toasts"></div>
+              <RQ className="svgicon" />
+            </div>
+            <div style={{ width: "700px" }}>
+              <Table columns={columns} dataSource={this.state.sourceData} />
+              <p>{this.state.result}</p>
+            </div>
+            <Modal
+              title={false}
+              visible={this.state.visible}
+              centered={true}
+              onOk={false}
+              // bodyStyle={{
+              //   backgroundColor: "white",
+              //   width: "600px",
+              //   heihgt: "300px",
+              //   padding: "20px",
+              // }}
+              footer={false}
+              confirmLoading={this.state.confirmLoading}
+              onCancel={this.handleCancel}>
+              {" "}
+              <QrReader
+                onError={this.handleError}
+                onLoad={(e) => console.log(e, "on load")}
+                onScan={this.showStudentbtn}
+                style={{ width: "100%", heihgt: "100" }}
+              />
+            </Modal>
+          </div>
+        )}
       </div>
-      <div style={{ width: "700px" }}>
-      <Table columns={columns} dataSource={this.state.sourceData} />
-      <p>{this.state.result}</p>
-      </div>
-      </div>      </div>
     );
   }
 }

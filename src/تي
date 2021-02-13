@@ -1,0 +1,18 @@
+
+
+function gordon(a){
+let words=a.split(" ").map(w=> 
+w.replace("a","@")+"!!!!"
+).
+map(w=>w.replace("e","*")).
+
+map(w=>w.replace("o","*")).
+
+map(w=>w.replace("u","*")).
+
+map(w=>w.replace("i","*")).join(" ").toUpperCase()
+return words; 
+
+
+
+}
