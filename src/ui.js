@@ -247,7 +247,7 @@ showConforimModle=()=>{
                  ,textAlign:"center"
            
             }}>
-                <h1 style={{padding:"50px 0"}}> Plasse Enter your QR </h1>
+                <h1 style={{padding:"50px 0"}}> Please Enter your QR </h1>
               
                 <RQ className="labelicon"  />
               {/* <Table columns={columns} dataSource={this.state.sourceData} />
