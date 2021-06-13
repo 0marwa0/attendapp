@@ -1,11 +1,8 @@
 import NavBar from "./navBar";
 import { Modal } from "antd";
-import { Switch,Route } from "react-router-dom";
+import {ReactComponent as Done} from "./maps-and-flags.svg"
 import { Button, notification } from "antd";
 import "react-notifications/lib/notifications.css";
-import Dash from "./dashboard.js"
-import Ui from "./ui.js"
-
 import {
   NotificationContainer,
   NotificationManager,
@@ -18,6 +15,7 @@ import { Table, Tag, Space } from "antd";
 import { ReactComponent as RQ } from "./qr.svg";
 import Student from "./profile";
 import "./App.css";
+import Dash from "./dashboard";
 const key = "updatable";
 const stu = ["alert", "amna"];
 const columns = [
@@ -88,7 +86,7 @@ const dataApp = [
     group: ["A"],
   },
 ];
-class App extends Component {
+class Ui extends Component {
   state = {
     visible: false,
     showStudent: false,
@@ -114,7 +112,7 @@ class App extends Component {
   
 showConforimModle=()=>{
   
-  setInterval(()=> this.setState({showConforim:true}) ,100)
+  setInterval(()=> this.setState({showConforim:true}) ,1000)
  this.setState({showConforim:false})
 }
 
@@ -135,23 +133,52 @@ showConforimModle=()=>{
     if (data) {
       dataApp.map((i) => {
         if (i.name === data) {
-          console.log("coutch ittttttttttt", dataApp);
           i.attend = 1;
           this.show();
-          this.showConforimModle()
           this.setState({ sourceData: dataApp });
         }
       });
     }
 
     if (data) {
-      this.showConforimModle()
-
+     this.openNotification()
+     //this.setState({showConforim:true})
       this.setState({
         result: data,
       });
     }
   };
+
+
+
+
+
+
+
+  openNotification = () => {
+    const key = `open${Date.now()}`;
+    const btn = (
+      <Button type="primary" size="small" onClick={() => notification.close(key)}>
+        Confirm
+      </Button>
+    );
+    notification.open({
+      message: '',
+      description:  <div style={{
+        alignItems:"center",justifyContent:"center",
+                        display:"flex",flexDirection:"column"}}>
+                      
+            <h2>Recorded Successfully</h2>
+                        <div><Done width="80px"/></div>
+                      </div>,
+        
+     btn,
+      key,
+     // onClose: close,
+    });
+  };
+
+
   handleError = (err) => {
     console.error(err);
   };
@@ -197,12 +224,9 @@ showConforimModle=()=>{
   render() {
     return (
       <div>
-        <Switch>
-        <Route path="/dash" component={Dash} exact/>
-         <Route path="/" component={Ui} exact/>
-        </Switch>
+        
         {/* <NavBar search={this.handleOk} /> */}
-        {/* <NotificationContainer />
+        <NotificationContainer />
         {this.state.showStudent ? (
           <Student />
         ) : (
@@ -212,21 +236,39 @@ showConforimModle=()=>{
                 onError={this.handleError}
                 onLoad={(e) => console.log(e, "on load")}
                 onScan={this.handleScan}
+                
                 style={{ width: "100%", heihgt: "100", borderRadius: "10px" }}
               />
               <div id="toasts"></div>
               <RQ className="svgicon" />
             </div>
-            <div style={{ width: "700px" }}>
-              <Table columns={columns} dataSource={this.state.sourceData} />
-              <p>{this.state.result}</p>
+            <div style={{
+                 width: "auto"
+                 ,textAlign:"center"
+           
+            }}>
+                <h1 style={{padding:"50px 0"}}> Plasse Enter your QR </h1>
+              
+                <RQ className="labelicon"  />
+              {/* <Table columns={columns} dataSource={this.state.sourceData} />
+              <p>{this.state.result}</p> */}
             </div>
             <Modal
+            width="350px"
+            heihgt ="auto"
           footer={null}
+          onCancel={()=>this.setState({showConforim:false})}
             visible={this.state.showConforim}
             centered={true}
             >
-              hhhhhhhhhhhhhhi good moring 
+              <div style={{
+alignItems:"center",justifyContent:"center",
+                display:"flex",flexDirection:"column"}}>
+              
+    <h2>Recorded Successfully</h2>
+                <div><Done width="80px"/></div>
+              </div>
+            
             </Modal>
             <Modal
               title={false}
@@ -251,10 +293,10 @@ showConforimModle=()=>{
               />
             </Modal>
           </div>
-        )} */}
+        )}
       </div>
     );
   }
 }
 
-export default App;
+export default Ui;
